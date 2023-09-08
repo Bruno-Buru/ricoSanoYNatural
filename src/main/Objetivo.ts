@@ -18,6 +18,10 @@ export class Objetivo{
     public getDescripcion():string{
         return this.descripcion
     }
+        
 
-
+    public cumplido(){
+        return this.alcanzado;
+    }
+    
 }

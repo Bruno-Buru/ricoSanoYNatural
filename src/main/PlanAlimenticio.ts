@@ -1,10 +1,13 @@
 import { Bebida } from "./Bebida";
 import { Colacion } from "./Colacion";
 import { Comida } from "./Comida";
+import { Composicion } from "./Composicion";
 import { Duracion } from "./Duracion.enum";
-import { Objetivo } from "./Objetivo";
+import { Objetivo } from './Objetivo';
 import { Paciente } from "./Paciente";
 import { Profesional } from "./Profesional";
+import { TipoComida } from './TipoComida.enum';
+import { CalificacionObjetivos } from './calificacion.enum';
 
 export class PlanAlimenticio{
 
@@ -121,6 +124,116 @@ export class PlanAlimenticio{
     }
 
 
+    public cantDeObjetivos():number{
+        return this.objetivos.length
+
+    }
 
 
+
+    public calcularResultado():CalificacionObjetivos{
+        let cantidadObjetivos = this.cantDeObjetivos()
+        let cantidadDeObjetivosCumplidos = this.objetivos.filter((objetivo)=> objetivo.cumplido()).length
+        if(cantidadObjetivos===cantidadDeObjetivosCumplidos){
+          return CalificacionObjetivos.EXCELENTE
+        }
+          
+        let porcentajeObjetivos = (cantidadDeObjetivosCumplidos
+            *100)/cantidadObjetivos
+
+        if(porcentajeObjetivos >= 60){
+            return CalificacionObjetivos.MUY_BUENA
+        }
+
+        if(porcentajeObjetivos <60 && porcentajeObjetivos >=50){
+            return CalificacionObjetivos.BUENA
+        }
+        else{
+            return CalificacionObjetivos.REGULAR
+        }
+        
+        
+    }
+
+
+
+    public agregarObjetivo(objetivo:Objetivo){
+        this.objetivos.push(objetivo)
+    }
+
+
+    public agregarComida(comida:Comida){
+        this.comidas.push(comida)
+    }
+
+    public cantComidas(){
+        return this.comidas.length
+    }
+   
+
+    public comidasDeTipo(comida1:TipoComida,comida2:TipoComida){
+        return this.comidas.filter((comida)=>comida.getTipo() == comida1 || comida.getTipo() == comida2)
+    }
+
+
+
+    public cantDeComidaSegunTipo(comida1:TipoComida,comida2:TipoComida){
+
+        return this.comidas.filter((comida)=>comida.getTipo() == comida1 || comida.getTipo() == comida2).length
+
+    }
+
+    public fuerteEnProteinas(){
+        var comidasAC= this.comidasDeTipo(TipoComida.ALMUERZO,TipoComida.CENA)
+
+        var porcentajeProteina=0
+
+        comidasAC.forEach((comida) => {
+
+        porcentajeProteina  += comida.porcentajeDeProteinas()
+
+        })
+
+        var promedio= porcentajeProteina/comidasAC.length
+
+        return promedio >50;
+    }
+
+
+    public bienVerde(){
+        var comidasAC= this.comidasDeTipo(TipoComida.ALMUERZO,TipoComida.CENA)
+
+        var porcentajeVerde=0
+
+        comidasAC.forEach((comida) => {
+
+        porcentajeVerde  += comida.porcentajeDeVerde()
+
+        })
+
+        var promedio= porcentajeVerde/comidasAC.length
+
+        return promedio >35;
+    }
+    
+
+    
+
+    
+    public agregarColacion(colacion:Colacion){
+        this.colaciones.push(colacion)
+    }
+
+    public agregarBebida(bebida:Bebida){
+        this.bebidas.push(bebida)
+    }
+
+
+    public cantColaciones(){
+        return this.colaciones.length
+    }
+
+    public cantBebidas(){
+        return this.bebidas.length
+    }
 }
